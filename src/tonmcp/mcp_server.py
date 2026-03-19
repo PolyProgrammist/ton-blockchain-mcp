@@ -197,12 +197,16 @@ if __name__ == "__main__":
         uvicorn.run("tonmcp.mcp_server:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)), reload=True)
     elif "remote" in sys.argv:
         # Run as StreamableHTTP server (for OpenAI Responses API, etc.)
+        from mcp.server.transport_security import TransportSecuritySettings
         api_key = os.getenv("TON_API_KEY")
         if not api_key:
             raise ValueError("TON_API_KEY environment variable is required")
         TonMcpServer(api_key)
         tmcp.settings.host = "0.0.0.0"
         tmcp.settings.port = int(os.getenv("PORT", 8000))
+        tmcp.settings.transport_security = TransportSecuritySettings(
+            enable_dns_rebinding_protection=False,
+        )
         tmcp.run(transport="streamable-http")
     else:
         main()
