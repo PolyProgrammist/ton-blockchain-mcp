@@ -195,5 +195,14 @@ if __name__ == "__main__":
         # Run FastAPI app for remote (legacy, not for MCP protocol)
         import uvicorn
         uvicorn.run("tonmcp.mcp_server:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)), reload=True)
+    elif "remote" in sys.argv:
+        # Run as StreamableHTTP server (for OpenAI Responses API, etc.)
+        api_key = os.getenv("TON_API_KEY")
+        if not api_key:
+            raise ValueError("TON_API_KEY environment variable is required")
+        TonMcpServer(api_key)
+        tmcp.settings.host = "0.0.0.0"
+        tmcp.settings.port = int(os.getenv("PORT", 8000))
+        tmcp.run(transport="streamable-http")
     else:
         main()
