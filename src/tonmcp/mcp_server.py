@@ -207,6 +207,7 @@ if __name__ == "__main__":
         tmcp.settings.transport_security = TransportSecuritySettings(
             enable_dns_rebinding_protection=False,
         )
+        tmcp.settings.stateless_http = True
         tmcp.run(transport="streamable-http")
     else:
         main()
